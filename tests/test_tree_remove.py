@@ -6,9 +6,7 @@ def get_prices(node: TreeNode) -> list[float]:
 def test_tree_remove():
     tree = TreeNode(Order(id=0, owner="", price=0, volume=1))
     for i in range(1, 1000):
-        tree.insert(Order(id=i, owner="", price=i, volume=1))
-        while tree.parent is not None:
-            tree = tree.parent
+        tree = tree.insert(Order(id=i, owner="", price=i, volume=1))
     assert get_prices(tree) == list(range(1000)), f"Assertion failed: left = {get_prices(tree)}, right = {get_prices(tree)}"
     for i in range(1000):
         all_nodes = tree.get_all_nodes()

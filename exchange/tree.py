@@ -30,24 +30,40 @@ class TreeNode:
         left_depth = TreeNode.depth(self.left)
         right_depth = TreeNode.depth(self.right)
         self.depth = 1 + max(left_depth, right_depth)
+    
+    def rotate_to_balance(self) -> TreeNode:
+        """Rotate the current node such that it maintains the balaning property.
+        
+        When the depth of the left tree and the right tree are differed by at most 1, the node
+        is said to be "balanced".
 
-    def insert(self, neworder: Order):
+        This function returns the new root node.
+        """
+        if TreeNode.depth(self.right) - TreeNode.depth(self.left) >= 2:
+            if self.right is not None and TreeNode.depth(self.right.left) - TreeNode.depth(self.right.right) == 1:
+                self.right.rotate_right()
+            self.rotate_left()
+            return self.parent
+        elif TreeNode.depth(self.left) - TreeNode.depth(self.right) >= 2:
+            if self.left is not None and TreeNode.depth(self.left.right) - TreeNode.depth(self.left.left) == 1:
+                self.left.rotate_left()
+            self.rotate_right()
+            return self.parent
+        return self
+
+    def insert(self, neworder: Order) -> TreeNode:
         if not (self.order < neworder):
             if self.left is not None:
                 self.left.insert(neworder)
             else:
                 self.left = TreeNode(neworder, self)
-        if neworder > self.order:
+        else:
             if self.right is not None:
                 self.right.insert(neworder)
             else:
                 self.right = TreeNode(neworder, self)
-
-        if TreeNode.depth(self.right) - TreeNode.depth(self.left) >= 2:
-            self.rotate_left()
-        elif TreeNode.depth(self.left) - TreeNode.depth(self.right) >= 2:
-            self.rotate_right()
         self.update_depth()
+        return self.rotate_to_balance()
 
     def find_largest(self) -> TreeNode:
         if self.right is not None:
@@ -61,34 +77,24 @@ class TreeNode:
 
     def remove(self) -> Optional[TreeNode]:
         """Remove self from the tree. Returns the new root of the tree."""
-        if self.left is None and self.right is None:
-            to_remove = self
-        elif TreeNode.depth(self.right) > TreeNode.depth(self.left):
-            smallest = self.right.find_smallest()
-            smallest.rotate_left()
-            self.order = smallest.order
-            to_remove = smallest
-        else:
-            largest = self.left.find_largest()
-            largest.rotate_right()
-            self.order = largest.order
-            to_remove = largest
-        p = to_remove.parent
-        q = p
+        while self.left is not None or self.right is not None:
+            if TreeNode.depth(self.left) < TreeNode.depth(self.right):
+                self.rotate_left()
+            else:
+                self.rotate_right()
+        p = self.parent
         if p is not None:
-            if to_remove == p.left:
+            if self is p.left:
                 p.left = None
             else:
                 p.right = None
-            while p is not None:
-                q = p
-                if TreeNode.depth(p.right) - TreeNode.depth(p.left) >= 2:
-                    p.rotate_left()
-                elif TreeNode.depth(p.left) - TreeNode.depth(p.right) >= 2:
-                    p.rotate_right()
-                p.update_depth()
-                p = p.parent
-        return q
+        else:
+            return None
+        p.update_depth()
+        while p.parent is not None:
+            p.rotate_to_balance()
+            p = p.parent
+        return p
 
     def get_all_nodes(self) -> list[Self]:
         ans = []
@@ -145,3 +151,29 @@ class TreeNode:
         self.parent = b
         self.update_depth()
         b.update_depth()
+
+    def split(self, target_price: float) -> tuple[Optional[TreeNode], Optional[TreeNode]]:
+        """
+        Split the current tree to two trees, with all values in the left tree smaller than or equal
+        to the given value, and the right tree larger than the given value.
+        """
+        if self.order.price <= target_price:
+            if self.right is not None:
+                rl, rr = self.right.split(target_price)
+                self.right = rl
+                if rl is not None:
+                    rl.parent = self
+                self.update_depth()
+                return (self, rr)
+            else:
+                return (self, None)
+        else:
+            if self.left is not None:
+                ll, lr = self.left.split(target_price)
+                self.left = lr
+                if lr is not None:
+                    lr.parent = self
+                self.update_depth()
+                return (ll, self)
+            else:
+                return (None, self)
