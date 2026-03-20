@@ -3,7 +3,7 @@ import random
 
 from exchange import TreeNode, Order
 
-if __name__ == "__main__":
+def test_tree_insert():
     tree = TreeNode(Order(id=0, owner="", price=0, volume=1))
     N = 100000
     for i in range(1, N):
@@ -19,3 +19,6 @@ if __name__ == "__main__":
     assert tree_len == N
     assert 2 ** (tree.depth - 1) <= tree_len <= 2 ** tree.depth
     print("All tests passed")
+
+if __name__ == "__main__":
+    test_tree_insert()
