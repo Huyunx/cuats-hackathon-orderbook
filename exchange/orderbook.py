@@ -1,10 +1,10 @@
-from typing import Any, Literal
+from typing import Any, Literal, Self
 
 from .types import Order, Trade, OrderStatus, OrderResult
 
 
 class OrderBook:
-    def view_orderbook() -> OrderBook | Any:
+    def view_orderbook() -> Self | Any:
         """
         Returns the current state of the limit order book for all assets.
         The returned OrderBook must provide read-only access to the data
