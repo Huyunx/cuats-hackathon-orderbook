@@ -64,7 +64,11 @@ class OrderBook:
         Returns:
         tuple[float, int]: (price, volume) or None if no bids exist
         """
-        pass
+        bid_tree_root = self.assets[asset][0]
+        if bid_tree_root is None:
+            return None
+        best_node = bid_tree_root.find_largest()
+        return(float(best_node.price), int(bid_tree_root.volume))
 
     def get_best_ask(self, asset: str) -> tuple[float, int] | None:
         """
@@ -74,7 +78,11 @@ class OrderBook:
         Returns:
         tuple[float, int]: (price, volume) or None if no asks exist
         """
-        pass
+        ask_tree_root = self.assets[asset][1]
+        if ask_tree_root is None:
+            return None
+        best_node = ask_tree_root.find_smallest()
+        return (float(best_node.price), int(ask_tree_root.volume))
 
     def get_spread(self, asset: str) -> float | None:
         """
@@ -84,7 +92,13 @@ class OrderBook:
         Returns:
         float: The spread (best_ask - best_bid), or None if either side is empty
         """
-        pass
+        best_bid = self.get_best_bid(asset)
+        best_ask = self.get_best_ask(asset)
+        if best_bid is None or best_ask is None:
+            return None
+        best_bid_price = best_bid[0]
+        best_ask_price = best_ask[0]
+        return float(best_ask_price - best_bid_price)
 
     def get_market_depth(self, asset: str, levels: int = 5) -> dict:
         """
@@ -98,7 +112,6 @@ class OrderBook:
         "asks": [(price, volume), ...] # sorted by price ascending
         }
         """
-        pass
 
     def get_volume_at_price(self, asset: str, price: float, side: Literal["bid", "ask"]) -> int:
         """
