@@ -13,11 +13,11 @@ class TreeNode:
     def __str__(self):
         return f"TreeNode(order={self.order}, depth={self.depth})"
 
-    def __init__(self, order: Order):
+    def __init__(self, order: Order, parent: Optional[Self] = None):
         self.order = order
         self.left = None
         self.right = None
-        self.parent = None
+        self.parent = parent
         self.depth = 1
 
     @staticmethod
@@ -36,12 +36,12 @@ class TreeNode:
             if self.left is not None:
                 self.left.insert(neworder)
             else:
-                self.left = TreeNode(neworder)
+                self.left = TreeNode(neworder, self)
         if neworder > self.order:
             if self.right is not None:
                 self.right.insert(neworder)
             else:
-                self.right = TreeNode(neworder)
+                self.right = TreeNode(neworder, self)
 
         if TreeNode.depth(self.right) - TreeNode.depth(self.left) >= 2:
             self.rotate_left()
@@ -78,10 +78,9 @@ class TreeNode:
             pass
         elif self is self.parent.left:
             self.parent.left = b
-            self.parent = b
         elif self is self.parent.right:
             self.parent.right = b
-            self.parent = b
+        self.parent = b
         self.update_depth()
         b.update_depth()
 
@@ -96,9 +95,8 @@ class TreeNode:
             pass
         elif self is self.parent.left:
             self.parent.left = b
-            self.parent = b
         elif self is self.parent.right:
             self.parent.right = b
-            self.parent = b
+        self.parent = b
         self.update_depth()
         b.update_depth()

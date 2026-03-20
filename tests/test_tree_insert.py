@@ -5,9 +5,12 @@ from exchange import TreeNode, Order
 
 if __name__ == "__main__":
     tree = TreeNode(Order(id=0, owner="", price=0, volume=1))
-    for i in range(1, 3):
+    for i in range(1, 100000):
         tree.insert(Order(id=0, owner="", price=i, volume=1))
         while tree.parent is not None:
             tree = tree.parent
+        # print("\n".join(map(str, tree.get_all_nodes())))
+        # print("\n")
     print(len(tree.get_all_nodes()))
+    print(tree.depth)
     # print("\n".join(map(str, tree.get_all_nodes())))
