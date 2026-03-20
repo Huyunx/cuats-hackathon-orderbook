@@ -4,7 +4,7 @@ from .types import Order, Trade, OrderStatus, OrderResult
 
 
 class OrderBook:
-    def view_orderbook() -> Self | Any:
+    def view_orderbook(self) -> Self | Any:
         """
         Returns the current state of the limit order book for all assets.
         The returned OrderBook must provide read-only access to the data
@@ -15,7 +15,7 @@ class OrderBook:
         """
         pass
 
-    def view_last_orders(n: int = 10000) -> list[Order]:
+    def view_last_orders(self, n: int = 10000) -> list[Order]:
         """
         Returns the n most recent orders submitted to the exchange.
         Orders should be sorted by submission time, with the most recent
@@ -32,7 +32,7 @@ class OrderBook:
         """
         pass
 
-    def view_largest_orders(n: int = 10000) -> list[Order]:
+    def view_largest_orders(self, n: int = 10000) -> list[Order]:
         """
         Returns the n largest orders by volume that have NOT been cancelled.
         Includes both pending orders and fully/partially executed orders.
@@ -44,7 +44,7 @@ class OrderBook:
         """
         pass
 
-    def view_smallest_orders(n: int = 10000) -> list[Order]:
+    def view_smallest_orders(self, n: int = 10000) -> list[Order]:
         """
         Returns the n smallest orders by volume that have NOT been cancelled.
         Includes both pending orders and fully/partially executed orders.
@@ -56,7 +56,7 @@ class OrderBook:
         """
         pass
 
-    def get_best_bid(asset: str) -> tuple[float, int] | None:
+    def get_best_bid(self, asset: str) -> tuple[float, int] | None:
         """
         Returns the best (highest) bid price and total volume at that price.
         Args:
@@ -66,7 +66,7 @@ class OrderBook:
         """
         pass
 
-    def get_best_ask(asset: str) -> tuple[float, int] | None:
+    def get_best_ask(self, asset: str) -> tuple[float, int] | None:
         """
         Returns the best (lowest) ask price and total volume at that price.
         Args:
@@ -76,7 +76,7 @@ class OrderBook:
         """
         pass
 
-    def get_spread(asset: str) -> float | None:
+    def get_spread(self, asset: str) -> float | None:
         """
         Returns the bid-ask spread for an asset.
         Args:
@@ -86,7 +86,7 @@ class OrderBook:
         """
         pass
 
-    def get_market_depth(asset: str, levels: int = 5) -> dict:
+    def get_market_depth(self, asset: str, levels: int = 5) -> dict:
         """
         Returns the market depth up to a specified number of price levels.
         Args:
@@ -100,7 +100,7 @@ class OrderBook:
         """
         pass
 
-    def get_volume_at_price(asset: str, price: float, side: Literal["bid", "ask"]) -> int:
+    def get_volume_at_price(self, asset: str, price: float, side: Literal["bid", "ask"]) -> int:
         """
         Returns the total order volume at a specific price level.
         Args:
@@ -113,6 +113,7 @@ class OrderBook:
         pass
 
     def submit_order(
+        self,
         order_id: int,
         order_owner: str,
         order_type: Literal["market", "limit", "fok", "ioc"],
@@ -141,7 +142,7 @@ class OrderBook:
         """
         pass
 
-    def cancel_order(order_id: int) -> bool:
+    def cancel_order(self, order_id: int) -> bool:
         """
         Cancels a pending order.
         If the order exists and has remaining unfilled quantity, it is removed
@@ -156,6 +157,7 @@ class OrderBook:
         pass
 
     def modify_order(
+        self,
         order_id: int,
         new_quantity: int | None = None,
         new_price: float | None = None
@@ -176,6 +178,7 @@ class OrderBook:
         pass
 
     def get_trade_history(
+        self,
         asset: str | None = None,
         limit: int = 1000
     ) -> list[Trade]:
@@ -189,7 +192,7 @@ class OrderBook:
         """
         pass
 
-    def get_order_status(order_id: int) -> OrderStatus | None:
+    def get_order_status(self, order_id: int) -> OrderStatus | None:
         """
         Returns the current status of an order.
         Args:
